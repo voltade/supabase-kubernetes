@@ -1,10 +1,10 @@
 # https://helm.sh/docs/howto/chart_releaser_action/#github-actions-workflow
-
 name: Release Charts
 
 on:
   push:
-    tags: "*"
+    branches:
+      - main
 
 jobs:
   release:
