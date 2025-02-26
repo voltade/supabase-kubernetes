@@ -19,7 +19,7 @@ secret:
 db:
   enabled: true
   image:
-    tag: 15.8.1.020
+    tag: 15.8.1.044
   livenessProbe:
     exec:
       command:
@@ -32,7 +32,7 @@ db:
 
 studio:
   image:
-    tag: 20250113-83c9420
+    tag: 20250224-d10db0f
   environment:
     STUDIO_DEFAULT_ORGANIZATION: "My Organization"
     STUDIO_DEFAULT_PROJECT: "My Project"
@@ -40,13 +40,13 @@ studio:
     NEXT_PUBLIC_ENABLE_LOGS: "true"
   livenessProbe:
     httpGet:
-      path: /api/profile
+      path: /api/platform/profile
       port: 3000
     initialDelaySeconds: 3
 
 auth:
   image:
-    tag: v2.167.0
+    tag: v2.169.0
   environment:
     API_EXTERNAL_URL: http://example.com
     GOTRUE_SITE_URL: http://example.com
@@ -59,11 +59,11 @@ auth:
 
 rest:
   image:
-    tag: v12.2.0
+    tag: v12.2.8
 
 realtime:
   image:
-    tag: v2.34.7
+    tag: v2.34.31
   livenessProbe:
     httpGet:
       path: /
@@ -72,11 +72,11 @@ realtime:
 
 meta:
   image:
-    tag: v0.84.2
+    tag: v0.86.0
 
 storage:
   image:
-    tag: v1.14.5
+    tag: v1.19.1
   livenessProbe:
     httpGet:
       path: /status
@@ -123,7 +123,7 @@ kong:
 
 analytics:
   image:
-    tag: 1.4.0
+    tag: 1.11.0
   livenessProbe:
     httpGet:
       path: /health
@@ -151,4 +151,4 @@ vector:
 
 functions:
   image:
-    tag: v1.66.5
+    tag: v1.67.2
