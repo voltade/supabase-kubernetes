@@ -45,12 +45,8 @@ Check if both s3 keys are valid
 */}}
 {{- define "supabase.secret.s3.isValid" -}}
 {{- $isValid := "false" -}}
-{{- if .Values.secret.s3.keyId -}}
-{{- if .Values.secret.s3.accessKey -}}
+{{- if or (and .Values.secret.s3.keyId .Values.secret.s3.accessKey) (and .Values.secret.s3.secretRef .Values.secret.s3.secretRefKey) -}}
 {{- printf "true" -}}
-{{- else -}}
-{{- printf "false" -}}
-{{- end -}}
 {{- else -}}
 {{- printf "false" -}}
 {{- end -}}
