@@ -650,9 +650,9 @@ storage:
     FILE_SIZE_LIMIT: "52428800"
     STORAGE_BACKEND: file # file, s3
     FILE_STORAGE_BACKEND_PATH: /var/lib/storage
-    TENANT_ID: stub
-    REGION: stub
-    GLOBAL_S3_BUCKET: stub
+    # TENANT_ID: stub
+    # REGION: stub
+    # GLOBAL_S3_BUCKET: stub
     # Set variables below and secret.s3 above to enable S3 storage bucket
     # If using this chart's minio, skip the endpoint and protocol below
     # GLOBAL_S3_ENDPOINT: http://minio:9000
