@@ -161,16 +161,6 @@ spec:
                   {{- end }}
             {{- end }}
             {{- if .Values.secret.messagebird }}
-            - name: GOTRUE_SMS_MESSAGEBIRD_ORIGINATOR
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.messagebird.secretRef }}
-                  name: {{ .Values.secret.messagebird.secretRef }}
-                  key: {{ .Values.secret.messagebird.secretRefKey.originator | default "originator" }}
-                  {{- else }}
-                  name: {{ include "supabase.secret.messagebird" . }}
-                  key: originator
-                  {{- end }}
             - name: GOTRUE_SMS_MESSAGEBIRD_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -183,16 +173,6 @@ spec:
                   {{- end }}
             {{- end }}
             {{- if .Values.secret.textlocal }}
-            - name: GOTRUE_SMS_TEXTLOCAL_SENDER
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.textlocal.secretRef }}
-                  name: {{ .Values.secret.textlocal.secretRef }}
-                  key: {{ .Values.secret.textlocal.secretRefKey.sender | default "sender" }}
-                  {{- else }}
-                  name: {{ include "supabase.secret.textlocal" . }}
-                  key: sender
-                  {{- end }}
             - name: GOTRUE_SMS_TEXTLOCAL_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -224,16 +204,6 @@ spec:
                   {{- else }}
                   name: {{ include "supabase.secret.vonage" . }}
                   key: apiSecret
-                  {{- end }}
-            - name: GOTRUE_SMS_VONAGE_FROM
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.vonage.secretRef }}
-                  name: {{ .Values.secret.vonage.secretRef }}
-                  key: {{ .Values.secret.vonage.secretRefKey.from | default "from" }}
-                  {{- else }}
-                  name: {{ include "supabase.secret.vonage" . }}
-                  key: from
                   {{- end }}
             {{- end }}
           {{- with .Values.auth.envFrom }}
