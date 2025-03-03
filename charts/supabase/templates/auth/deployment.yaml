@@ -138,6 +138,96 @@ spec:
                   name: {{ include "supabase.secret.smtp" . }}
                   key: password
                   {{- end }}
+            - name: GOTRUE_SMS_TWILIO_ACCOUNT_SID
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.twilio.secretRef }}
+                  name: {{ .Values.secret.twilio.secretRef }}
+                  key: {{ .Values.secret.twilio.secretRefKey.accountSid | default "accountSid" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.twilio" . }}
+                  key: accountSid
+                  {{- end }}
+            - name: GOTRUE_SMS_TWILIO_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.twilio.secretRef }}
+                  name: {{ .Values.secret.twilio.secretRef }}
+                  key: {{ .Values.secret.twilio.secretRefKey.authToken | default "authToken" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.twilio" . }}
+                  key: authToken
+                  {{- end }}
+            - name: GOTRUE_SMS_MESSAGEBIRD_ORIGINATOR
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.messagebird.secretRef }}
+                  name: {{ .Values.secret.messagebird.secretRef }}
+                  key: {{ .Values.secret.messagebird.secretRefKey.originator | default "originator" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.messagebird" . }}
+                  key: originator
+                  {{- end }}
+            - name: GOTRUE_SMS_MESSAGEBIRD_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.messagebird.secretRef }}
+                  name: {{ .Values.secret.messagebird.secretRef }}
+                  key: {{ .Values.secret.messagebird.secretRefKey.accessKey | default "accessKey" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.messagebird" . }}
+                  key: accessKey
+                  {{- end }}
+            - name: GOTRUE_SMS_TEXTLOCAL_SENDER
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.textlocal.secretRef }}
+                  name: {{ .Values.secret.textlocal.secretRef }}
+                  key: {{ .Values.secret.textlocal.secretRefKey.sender | default "sender" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.textlocal" . }}
+                  key: sender
+                  {{- end }}
+            - name: GOTRUE_SMS_TEXTLOCAL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.textlocal.secretRef }}
+                  name: {{ .Values.secret.textlocal.secretRef }}
+                  key: {{ .Values.secret.textlocal.secretRefKey.apiKey | default "apiKey" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.textlocal" . }}
+                  key: apiKey
+                  {{- end }}
+            - name: GOTRUE_SMS_VONAGE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.vonage.secretRef }}
+                  name: {{ .Values.secret.vonage.secretRef }}
+                  key: {{ .Values.secret.vonage.secretRefKey.apiKey | default "apiKey" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.vonage" . }}
+                  key: apiKey
+                  {{- end }}
+            - name: GOTRUE_SMS_VONAGE_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.vonage.secretRef }}
+                  name: {{ .Values.secret.vonage.secretRef }}
+                  key: {{ .Values.secret.vonage.secretRefKey.apiSecret | default "apiSecret" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.vonage" . }}
+                  key: apiSecret
+                  {{- end }}
+            - name: GOTRUE_SMS_VONAGE_FROM
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secret.vonage.secretRef }}
+                  name: {{ .Values.secret.vonage.secretRef }}
+                  key: {{ .Values.secret.vonage.secretRefKey.from | default "from" }}
+                  {{- else }}
+                  name: {{ include "supabase.secret.vonage" . }}
+                  key: from
+                  {{- end }}
           {{- with .Values.auth.envFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
