@@ -138,6 +138,7 @@ spec:
                   name: {{ include "supabase.secret.smtp" . }}
                   key: password
                   {{- end }}
+            {{- if .Values.secret.twilio.secretRef }}
             - name: GOTRUE_SMS_TWILIO_ACCOUNT_SID
               valueFrom:
                 secretKeyRef:
@@ -158,6 +159,8 @@ spec:
                   name: {{ include "supabase.secret.twilio" . }}
                   key: authToken
                   {{- end }}
+            {{- end }}
+            {{- if .Values.secret.messagebird.secretRef }}
             - name: GOTRUE_SMS_MESSAGEBIRD_ORIGINATOR
               valueFrom:
                 secretKeyRef:
@@ -178,6 +181,8 @@ spec:
                   name: {{ include "supabase.secret.messagebird" . }}
                   key: accessKey
                   {{- end }}
+            {{- end }}
+            {{- if .Values.secret.textlocal.secretRef }}
             - name: GOTRUE_SMS_TEXTLOCAL_SENDER
               valueFrom:
                 secretKeyRef:
@@ -198,6 +203,8 @@ spec:
                   name: {{ include "supabase.secret.textlocal" . }}
                   key: apiKey
                   {{- end }}
+            {{- end }}
+            {{- if .Values.secret.vonage.secretRef }}
             - name: GOTRUE_SMS_VONAGE_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -228,6 +235,7 @@ spec:
                   name: {{ include "supabase.secret.vonage" . }}
                   key: from
                   {{- end }}
+            {{- end }}
           {{- with .Values.auth.envFrom }}
           envFrom:
             {{- toYaml . | nindent 12 }}
