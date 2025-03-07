@@ -16,8 +16,8 @@ data:
     sed \
     -e "s/\${SUPABASE_ANON_KEY}/${SUPABASE_ANON_KEY}/" \
     -e "s/\${SUPABASE_SERVICE_KEY}/${SUPABASE_SERVICE_KEY}/" \
-    -e "s/\${DASHBOARD_USERNAME}/${DASHBOARD_USERNAME}/" \
-    -e "s/\${DASHBOARD_PASSWORD}/${DASHBOARD_PASSWORD}/" \
+    -e "s/\${STUDIO_USERNAME}/${STUDIO_USERNAME}/" \
+    -e "s/\${STUDIO_PASSWORD}/${STUDIO_PASSWORD}/" \
     /usr/local/kong/template.yml \
     > /usr/local/kong/kong.yml
 
@@ -27,8 +27,8 @@ data:
     _transform: true
 
     consumers:
-    {{- if .Values.secret.dashboard }}
-      - username: DASHBOARD
+    {{- if .Values.secret.studio }}
+      - username: STUDIO
     {{- end }}
       - username: anon
         keyauth_credentials:
@@ -41,11 +41,11 @@ data:
         group: anon
       - consumer: service_role
         group: admin
-    {{- if .Values.secret.dashboard }}
+    {{- if .Values.secret.studio }}
     basicauth_credentials:
-      - consumer: DASHBOARD
-        username: ${DASHBOARD_USERNAME}
-        password: ${DASHBOARD_PASSWORD}
+      - consumer: STUDIO
+        username: ${STUDIO_USERNAME}
+        password: ${STUDIO_PASSWORD}
     {{- end }}
     services:
     {{- if .Values.auth.enabled }}
@@ -173,6 +173,11 @@ data:
               - /storage/v1/
         plugins:
           - name: cors
+          - name: request-transformer
+            config:
+              add:
+                headers:
+                  - 'Forwarded: host=\$(headers.host)/storage/v1;proto=https'
     {{- end }}
     {{- if .Values.functions.enabled }}
       - name: functions-v1
@@ -215,15 +220,15 @@ data:
               allow:
                 - admin
     {{- end }}
-      - name: dashboard
+      - name: studio
         _comment: 'Studio: /* -> http://{{ include "supabase.studio.fullname" . }}:{{ .Values.studio.service.port }}/*'
         url: http://{{ include "supabase.studio.fullname" . }}:{{ .Values.studio.service.port }}/
         routes:
-          - name: dashboard-all
+          - name: studio-all
             strip_path: true
             paths:
               - /
-    {{- if .Values.secret.dashboard }}
+    {{- if .Values.secret.studio }}
         plugins:
           - name: cors
           - name: basic-auth

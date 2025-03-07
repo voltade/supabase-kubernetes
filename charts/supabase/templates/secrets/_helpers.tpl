@@ -13,10 +13,10 @@ Expand the name of the SMTP secret.
 {{- end -}}
 
 {{/*
-Expand the name of the dashboard secret.
+Expand the name of the studio secret.
 */}}
-{{- define "supabase.secret.dashboard" -}}
-{{- printf "%s-dashboard" (include "supabase.fullname" .) }}
+{{- define "supabase.secret.studio" -}}
+{{- printf "%s-studio" (include "supabase.fullname" .) }}
 {{- end -}}
 
 {{/*

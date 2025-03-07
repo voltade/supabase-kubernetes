@@ -122,13 +122,13 @@ The secret can be created with kubectl via command-line:
 
 > If you depend on database providers like [StackGres](https://stackgres.io/), [Postgres Operator](https://github.com/zalando/postgres-operator) or self-hosted Postgres instance, fill in the secret above and modify any relevant Postgres attributes such as port or hostname (e.g. `PGPORT`, `DB_HOST`) for any relevant deployments. Refer to [values.yaml](values.yaml) for more details.
 
-### Dashboard secret
+### Studio secret
 
-By default, a username and password is required to access the Supabase Studio dashboard. Simply change them at:
+By default, a username and password is required to access the Supabase Studio studio. Simply change them at:
 
 ```yaml
 secret:
-  dashboard:
+  studio:
     username: supabase
     password: this_password_is_insecure_and_should_be_updated
 ```

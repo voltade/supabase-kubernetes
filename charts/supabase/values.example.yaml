@@ -1,4 +1,7 @@
 secret:
+  studio:
+    username: supabase
+    password: this_password_is_insecure_and_should_be_updated
   jwt:
     anonKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE
     serviceKey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q
@@ -6,29 +9,12 @@ secret:
   smtp:
     username: your-mail@example.com
     password: example123456
-  dashboard:
-    username: supabase
-    password: this_password_is_insecure_and_should_be_updated
+  analytics:
+    apiKey: your-super-secret-and-long-logflare-key
   db:
     username: postgres
     password: example123456
     database: postgres
-  analytics:
-    apiKey: your-super-secret-and-long-logflare-key
-
-db:
-  enabled: true
-  image:
-    tag: 15.8.1.044
-  livenessProbe:
-    exec:
-      command:
-        - pg_isready
-        - -U
-        - postgres
-    initialDelaySeconds: 3
-  persistence:
-    enabled: false
 
 studio:
   image:
@@ -43,6 +29,29 @@ studio:
       path: /api/platform/profile
       port: 3000
     initialDelaySeconds: 3
+
+kong:
+  image:
+    repository: kong
+    tag: 2.8.1
+  environment:
+    KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
+    KONG_LOG_LEVEL: info
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    tls:
+      []
+      # - secretName: example-ingress-tls
+      #   hosts:
+      #     - example.com
+    hosts:
+      - host: example.com
+        paths:
+          - path: /
+            pathType: Prefix
 
 auth:
   image:
@@ -70,10 +79,6 @@ realtime:
       port: 4000
     initialDelaySeconds: 3
 
-meta:
-  image:
-    tag: v0.86.0
-
 storage:
   image:
     tag: v1.19.1
@@ -99,27 +104,13 @@ imgproxy:
   persistence:
     enabled: false
 
-kong:
+meta:
   image:
-    repository: kong
-    tag: 2.8.1
-  environment:
-    KONG_DECLARATIVE_CONFIG: /usr/local/kong/kong.yml
-    KONG_LOG_LEVEL: info
-  ingress:
-    enabled: true
-    className: "nginx"
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: /
-    tls: []
-      # - secretName: example-ingress-tls
-      #   hosts:
-      #     - example.com
-    hosts:
-      - host: example.com
-        paths:
-          - path: /
-            pathType: Prefix
+    tag: v0.86.0
+
+functions:
+  image:
+    tag: v1.67.2
 
 analytics:
   image:
@@ -129,6 +120,20 @@ analytics:
       path: /health
       port: 4000
     initialDelaySeconds: 3
+
+db:
+  enabled: true
+  image:
+    tag: 15.8.1.044
+  livenessProbe:
+    exec:
+      command:
+        - pg_isready
+        - -U
+        - postgres
+    initialDelaySeconds: 3
+  persistence:
+    enabled: false
 
 vector:
   image:
@@ -148,7 +153,3 @@ vector:
     - name: pod-logs
       hostPath:
         path: /var/log/pods
-
-functions:
-  image:
-    tag: v1.67.2

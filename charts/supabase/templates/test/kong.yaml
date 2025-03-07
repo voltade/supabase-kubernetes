@@ -13,16 +13,16 @@ spec:
     spec:
       containers:
         - env:
-            - name: DASHBOARD_USERNAME
+            - name: STUDIO_USERNAME
               valueFrom:
                 secretKeyRef:
                   key: username
-                  name: {{ include "supabase.fullname" . }}-dashboard
-            - name: DASHBOARD_PASSWORD
+                  name: {{ include "supabase.fullname" . }}-studio
+            - name: STUDIO_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: password
-                  name: {{ include "supabase.fullname" . }}-dashboard
+                  name: {{ include "supabase.fullname" . }}-studio
           name: test-kong
           image: kdevup/curljq
           imagePullPolicy: IfNotPresent
@@ -30,10 +30,10 @@ spec:
             - /bin/bash
             - -c
             - |
-              echo "Attempting to access dashboard with provided credentials..."
+              echo "Attempting to access studio with provided credentials..."
               curl -sL --fail \
                 -o /dev/null \
-                "http://${DASHBOARD_USERNAME}:${DASHBOARD_PASSWORD}@{{ include "supabase.kong.fullname" . }}:{{ .Values.kong.service.port }}" \
+                "http://${STUDIO_USERNAME}:${STUDIO_PASSWORD}@{{ include "supabase.kong.fullname" . }}:{{ .Values.kong.service.port }}" \
                 || ( echo -e "\e[0;31mFailed to get a valid response." && exit 1 )
               echo "Successfully connected."
       restartPolicy: Never
