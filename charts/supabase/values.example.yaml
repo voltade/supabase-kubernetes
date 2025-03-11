@@ -81,7 +81,7 @@ realtime:
 
 storage:
   image:
-    tag: v1.19.1
+    tag: v1.9.1
   livenessProbe:
     httpGet:
       path: /status

@@ -173,6 +173,12 @@ data:
               - /storage/v1/
         plugins:
           - name: cors
+          - name: request-transformer
+            config:
+              add:
+                headers:
+                  # https://github.com/supabase/storage/issues/331#issuecomment-2715238807
+                  - forwarded:host=$(headers.host)/storage/v1;proto=https
     {{- end }}
     {{- if .Values.functions.enabled }}
       - name: functions-v1
