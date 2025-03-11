@@ -173,11 +173,6 @@ data:
               - /storage/v1/
         plugins:
           - name: cors
-          - name: request-transformer
-            config:
-              add:
-                headers:
-                  - 'Forwarded: host=\$(headers.host)/storage/v1;proto=https'
     {{- end }}
     {{- if .Values.functions.enabled }}
       - name: functions-v1
