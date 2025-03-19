@@ -37,10 +37,6 @@ spec:
           command: ["/bin/bash"]
           args: ["/scripts/wrapper.sh"]
           env:
-            {{- range $key, $value := .Values.kong.environment }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
             - name: SUPABASE_ANON_KEY
               valueFrom:
                 secretKeyRef:
@@ -82,6 +78,19 @@ spec:
                   name: {{ include "supabase.secret.studio" . }}
                   key: password
                   {{- end }}
+            {{- range $key, $value := .Values.kong.environment }}
+            - name: {{ $key }}
+              {{- if kindIs "map" $value }}
+              {{- if hasKey $value "valueFrom" }}
+              valueFrom:
+                {{- toYaml $value.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ toYaml $value | quote }}
+              {{- end }}
+              {{- else }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
             {{- end }}
           {{- with .Values.kong.livenessProbe }}
           livenessProbe:

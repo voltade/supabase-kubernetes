@@ -35,10 +35,6 @@ spec:
           image: "{{ .Values.rest.image.repository }}:{{ .Values.rest.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.rest.image.pullPolicy }}
           env:
-            {{- range $key, $value := .Values.rest.environment }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
             {{- if .Values.db.enabled }}
             - name: DB_HOST
               value: {{ include "supabase.db.fullname" . }}
@@ -95,6 +91,19 @@ spec:
                   name: {{ include "supabase.secret.jwt" . }}
                   key: secret
                   {{- end }}
+            {{- range $key, $value := .Values.rest.environment }}
+            - name: {{ $key }}
+              {{- if kindIs "map" $value }}
+              {{- if hasKey $value "valueFrom" }}
+              valueFrom:
+                {{- toYaml $value.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ toYaml $value | quote }}
+              {{- end }}
+              {{- else }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
           {{- with .Values.rest.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

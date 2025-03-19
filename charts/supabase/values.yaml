@@ -292,6 +292,7 @@ auth:
   service:
     type: ClusterIP
     port: 9999
+  initContainerEnvironment:
   environment:
     # Override the database hostname if using external database
     # DB_HOST: DATABASE.NAMESPACE.svc.cluster.local
@@ -369,6 +370,7 @@ rest:
     pullPolicy: IfNotPresent
     tag: "latest"
   imagePullSecrets: []
+  replicaCount: 1
   nameOverride: ""
   fullnameOverride: ""
   livenessProbe: {}
@@ -449,6 +451,7 @@ realtime:
     pullPolicy: IfNotPresent
     tag: "latest"
   imagePullSecrets: []
+  replicaCount: 1
   nameOverride: ""
   fullnameOverride: ""
   livenessProbe: {}
@@ -476,6 +479,7 @@ realtime:
   service:
     type: ClusterIP
     port: 4000
+  initContainerEnvironment:
   environment:
     # Override the database hostname if using external database
     # DB_HOST: DATABASE.NAMESPACE.svc.cluster.local
@@ -561,6 +565,7 @@ storage:
   service:
     type: ClusterIP
     port: 5000
+  initContainerEnvironment:
   environment:
     # Override the database hostname if using external database
     # DB_HOST: DATABASE.NAMESPACE.svc.cluster.local

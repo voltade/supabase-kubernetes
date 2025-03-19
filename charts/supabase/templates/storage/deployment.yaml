@@ -52,6 +52,19 @@ spec:
                   {{- end }}
             - name: DB_PORT
               value: {{ .Values.analytics.environment.DB_PORT | quote }}
+            {{- range $key, $value := .Values.storage.initContainerEnvironment }}
+            - name: {{ $key }}
+              {{- if kindIs "map" $value }}
+              {{- if hasKey $value "valueFrom" }}
+              valueFrom:
+                {{- toYaml $value.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ toYaml $value | quote }}
+              {{- end }}
+              {{- else }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
           command: ["/bin/sh", "-c"]
           args:
             - |
@@ -92,10 +105,6 @@ spec:
           image: "{{ .Values.storage.image.repository }}:{{ .Values.storage.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.storage.image.pullPolicy }}
           env:
-            {{- range $key, $value := .Values.storage.environment }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
             {{- if .Values.db.enabled }}
             - name: DB_HOST
               value: {{ include "supabase.db.fullname" . }}
@@ -195,6 +204,19 @@ spec:
             {{- if .Values.minio.enabled }}
             - name: GLOBAL_S3_ENDPOINT
               value: http://{{ include "supabase.minio.fullname" . }}:{{ default 9000 .Values.minio.service.port }}
+            {{- end }}
+            {{- range $key, $value := .Values.storage.environment }}
+            - name: {{ $key }}
+              {{- if kindIs "map" $value }}
+              {{- if hasKey $value "valueFrom" }}
+              valueFrom:
+                {{- toYaml $value.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ toYaml $value | quote }}
+              {{- end }}
+              {{- else }}
+              value: {{ $value | quote }}
+              {{- end }}
             {{- end }}
           {{- with .Values.storage.livenessProbe }}
           livenessProbe:

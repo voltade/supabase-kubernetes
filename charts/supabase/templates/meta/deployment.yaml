@@ -35,10 +35,6 @@ spec:
           image: "{{ .Values.meta.image.repository }}:{{ .Values.meta.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.meta.image.pullPolicy }}
           env:
-            {{- range $key, $value := .Values.meta.environment }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
             {{- if .Values.db.enabled }}
             - name: DB_HOST
               value: {{ include "supabase.db.fullname" . }}
@@ -75,6 +71,19 @@ spec:
               value: $(DB_PASSWORD)
             - name: PG_META_DB_SSL_MODE
               value: $(DB_SSL)
+            {{- range $key, $value := .Values.meta.environment }}
+            - name: {{ $key }}
+              {{- if kindIs "map" $value }}
+              {{- if hasKey $value "valueFrom" }}
+              valueFrom:
+                {{- toYaml $value.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ toYaml $value | quote }}
+              {{- end }}
+              {{- else }}
+              value: {{ $value | quote }}
+              {{- end }}
+            {{- end }}
           {{- with .Values.meta.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

@@ -35,10 +35,6 @@ spec:
           image: "{{ .Values.studio.image.repository }}:{{ .Values.studio.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.studio.image.pullPolicy }}
           env:
-            {{- range $key, $value := .Values.studio.environment }}
-            - name: {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
             {{- if .Values.kong.enabled }}
             - name: SUPABASE_URL
               value: http://{{ include "supabase.kong.fullname" . }}:{{ .Values.kong.service.port }}
@@ -85,6 +81,19 @@ spec:
                 secretKeyRef:
                   name: {{ include "supabase.secret.analytics" . }}
                   key: apiKey
+            {{- end }}
+            {{- range $key, $value := .Values.studio.environment }}
+            - name: {{ $key }}
+              {{- if kindIs "map" $value }}
+              {{- if hasKey $value "valueFrom" }}
+              valueFrom:
+                {{- toYaml $value.valueFrom | nindent 16 }}
+              {{- else }}
+              value: {{ toYaml $value | quote }}
+              {{- end }}
+              {{- else }}
+              value: {{ $value | quote }}
+              {{- end }}
             {{- end }}
           {{- with .Values.studio.livenessProbe }}
           livenessProbe:
