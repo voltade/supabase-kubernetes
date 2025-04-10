@@ -35,40 +35,6 @@ spec:
           image: "{{ .Values.rest.image.repository }}:{{ .Values.rest.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.rest.image.pullPolicy }}
           env:
-            {{- if .Values.db.enabled }}
-            - name: DB_HOST
-              value: {{ include "supabase.db.fullname" . }}
-            {{- end }}
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.db.secretRef }}
-                  name: {{ .Values.secret.db.secretRef }}
-                  key: {{ .Values.secret.db.secretRefKey.password | default "password" }}
-                  {{- else }}
-                  name: {{ include "supabase.secret.db" . }}
-                  key: password
-                  {{- end }}
-            - name: DB_PASSWORD_ENC
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.db.secretRef }}
-                  name: {{ .Values.secret.db.secretRef }}
-                  key: {{ .Values.secret.db.secretRefKey.password | default "password" }}
-                  {{- else }}
-                  name: {{ include "supabase.secret.db" . }}
-                  key: password_encoded
-                  {{- end }}
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  {{- if .Values.secret.db.secretRef }}
-                  name: {{ .Values.secret.db.secretRef }}
-                  key: {{ .Values.secret.db.secretRefKey.database | default "database" }}
-                  {{- else }}
-                  name: {{ include "supabase.secret.db" . }}
-                  key: database
-                  {{- end }}
             - name: PGRST_JWT_SECRET
               valueFrom:
                 secretKeyRef:
